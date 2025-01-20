@@ -1,0 +1,10 @@
+{
+    "imports": {
+        "hono": "jsr:@hono/hono@^4.6.17"
+    },
+    "tasks": {},
+    "compilerOptions": {
+        "jsx": "precompile",
+        "jsxImportSource": "hono/jsx"
+    }
+}

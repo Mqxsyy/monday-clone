@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    container_name: monday-backend
+    working_dir: "/backend"
+    ports:
+      - '8000:8000'
+    develop: 
+      watch:
+        - action: sync
+          path: ./backend
+          target: /backend
