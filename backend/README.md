@@ -1,8 +1,11 @@
 ```
 npm install
 npm run dev
+
+
+npx prisma migrate dev --name ...
 ```
 
 ```
-open http://localhost:3000
+http://localhost:3000
 ```
