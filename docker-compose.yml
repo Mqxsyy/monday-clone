@@ -1,14 +1,27 @@
 services:
+  db:
+    image: mariadb
+    container_name: monday-db
+    restart: always
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3306:3306"
+
   backend:
     build:
       context: ./backend/
       dockerfile: Dockerfile
     container_name: monday-backend
+    restart: always
     working_dir: "/backend"
+    depends_on:
+      - db
     ports:
-      - '8000:8000'
-    develop: 
-      watch:
-        - action: sync
-          path: ./backend
-          target: /backend
+      - '3000:3000'
+    volumes:
+      - ./backend:/backend
+    command: bash -c "npm run prisma-migrate && npm run prisma-generate && npm run dev"
+
+volumes:
+  db:
