@@ -2,11 +2,13 @@
     "compilerOptions": {
         "target": "ESNext",
         "module": "NodeNext",
-        "strict": true,
-        "verbatimModuleSyntax": true,
+
         "types": ["node"],
         "jsx": "react-jsx",
-        "jsxImportSource": "hono/jsx"
+        "jsxImportSource": "hono/jsx",
+
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true
     },
     "exclude": ["node_modules"]
 }
