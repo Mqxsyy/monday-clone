@@ -2,7 +2,7 @@
     "name": "my-app",
     "scripts": {
         "watch": "tsc -w",
-        "dev": "tsc && node --watch src/index.js"
+        "dev": "tsc && node --watch src/routes/index.js"
     },
     "dependencies": {
         "@hono/node-server": "^1.13.8",

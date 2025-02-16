@@ -1,6 +1,9 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { User } from "./entity/User";
+import { Task } from "./entity/Task";
+import { TaskGroup } from "./entity/TaskGroup";
+import { Board } from "./entity/Board";
 
 export const AppDataSource = new DataSource({
     type: "mariadb",
@@ -11,7 +14,9 @@ export const AppDataSource = new DataSource({
     database: "monday",
     synchronize: true,
     logging: false,
-    entities: [User],
+    entities: [Task, TaskGroup, Board, User],
     migrations: [],
     subscribers: [],
 });
+
+AppDataSource.initialize();

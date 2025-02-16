@@ -1,0 +1,90 @@
+import { Hono } from "hono";
+import { AppDataSource } from "../data-source";
+import { Board } from "../entity/Board";
+import { TaskGroup } from "../entity/TaskGroup";
+
+const app = new Hono();
+
+app.post("/", async (c) => {
+    const { title, boardId } = await c.req.json();
+
+    const board = await AppDataSource.manager.findOneBy(Board, { id: Number(boardId) });
+
+    if (!board) {
+        return c.json({ error: "Board not found" }, 404);
+    }
+
+    const taskGroup = new TaskGroup();
+    taskGroup.title = title;
+    taskGroup.board = board;
+
+    await AppDataSource.manager.save(taskGroup);
+
+    return c.json({ message: "Task group created", taskGroup }, 201);
+});
+
+app.get("/:id", async (c) => {
+    const id = c.req.param("id");
+
+    const taskGroup = await AppDataSource.manager.findOne(TaskGroup, {
+        where: { id: Number(id) },
+        relations: ["tasks"],
+    });
+
+    if (!taskGroup) {
+        return c.json({ error: "Task group not found" }, 404);
+    }
+
+    return c.json(taskGroup);
+});
+
+app.put("/:id", async (c) => {
+    const id = c.req.param("id");
+    const { title, boardId } = await c.req.json();
+
+    const taskGroup = await AppDataSource.manager.findOneBy(TaskGroup, {
+        id: Number(id),
+    });
+
+    if (!taskGroup) {
+        return c.json({ error: "Task group not found" }, 404);
+    }
+
+    if (boardId) {
+        const board = await AppDataSource.manager.findOneBy(Board, {
+            id: Number(boardId),
+        });
+
+        if (!board) {
+            return c.json({ error: "Board not found" }, 404);
+        }
+
+        taskGroup.board = board;
+    }
+
+    if (title) {
+        taskGroup.title = title;
+    }
+
+    await AppDataSource.manager.save(taskGroup);
+
+    return c.json({ message: "Task group updated", taskGroup });
+});
+
+app.delete("/:id", async (c) => {
+    const id = c.req.param("id");
+
+    const taskGroup = await AppDataSource.manager.findOneBy(TaskGroup, {
+        id: Number(id),
+    });
+
+    if (!taskGroup) {
+        return c.json({ error: "Task group not found" }, 404);
+    }
+
+    await AppDataSource.manager.remove(taskGroup);
+
+    return c.json({ message: "Task group deleted" });
+});
+
+export default app;
