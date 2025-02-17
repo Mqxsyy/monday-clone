@@ -1,24 +1,20 @@
 import type { Component } from "solid-js";
-import styles from "./App.module.css";
-import logo from "./logo.svg";
 
 const App: Component = () => {
     return (
-        <div class={styles.App}>
-            <header class={styles.header}>
-                <img src={logo} class={styles.logo} alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload 2.
-                </p>
-                <a
-                    class={styles.link}
-                    href="https://github.com/solidjs/solid"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn Solid
-                </a>
-            </header>
+        <div>
+            <div class="card bg-base-100 w-96 shadow-sm">
+                <figure>
+                    <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
+                </figure>
+                <div class="card-body">
+                    <h2 class="card-title">Card Title</h2>
+                    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
+                    <div class="card-actions justify-end">
+                        <p class="btn btn-primary">Buy Now</p>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
