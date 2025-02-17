@@ -18,9 +18,22 @@ services:
     depends_on:
       - db
     ports:
-      - '3000:3000'
+      - '3006:3000'
     volumes:
       - ./backend:/backend
+    command: bash -c "npm run dev"
+
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    container_name: monday-frontend
+    restart: always
+    working_dir: "/frontend"
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./frontend:/frontend
     command: bash -c "npm run dev"
 
 volumes:

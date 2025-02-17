@@ -19,4 +19,6 @@ export const AppDataSource = new DataSource({
     subscribers: [],
 });
 
-AppDataSource.initialize();
+async () => {
+    await AppDataSource.initialize();
+};
