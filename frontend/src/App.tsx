@@ -1,22 +1,22 @@
-import type { Component } from "solid-js";
+import type { ParentProps } from "solid-js";
+import Dashboard from "./components/Dashboard.jsx";
+import SideBar from "./components/SideBar.jsx";
+import TopBar from "./components/TopBar.jsx";
+import CreateBoardModal from "./components/modals/CreateBoardModal.jsx";
+import CreateWorkspaceModal from "./components/modals/CreateWorkspaceModal.jsx";
 
-const App: Component = () => {
+export default function App(props: ParentProps) {
     return (
-        <div>
-            <div class="card bg-base-100 w-96 shadow-sm">
-                <figure>
-                    <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
-                </figure>
-                <div class="card-body">
-                    <h2 class="card-title">Card Title</h2>
-                    <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
-                    <div class="card-actions justify-end">
-                        <p class="btn btn-primary">Buy Now</p>
-                    </div>
-                </div>
+        <div class="bg-base-200 h-screen">
+            <TopBar />
+
+            <div class="flex flex-row w-full h-full">
+                <SideBar />
+                <Dashboard>{props.children}</Dashboard>
             </div>
+
+            <CreateWorkspaceModal />
+            <CreateBoardModal />
         </div>
     );
-};
-
-export default App;
+}

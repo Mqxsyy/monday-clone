@@ -1,9 +1,5 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
-import { User } from "./entity/User";
-import { Task } from "./entity/Task";
-import { TaskGroup } from "./entity/TaskGroup";
-import { Board } from "./entity/Board";
 
 export const AppDataSource = new DataSource({
     type: "mariadb",
@@ -14,11 +10,15 @@ export const AppDataSource = new DataSource({
     database: "monday",
     synchronize: true,
     logging: false,
-    entities: [Task, TaskGroup, Board, User],
+    entities: [`${__dirname}/entity/*.js`],
     migrations: [],
     subscribers: [],
 });
 
-async () => {
-    await AppDataSource.initialize();
-};
+AppDataSource.initialize()
+    .then(() => {
+        console.log("Data Source has been initialized!");
+    })
+    .catch((err) => {
+        console.error("Error during Data Source initialization", err);
+    });

@@ -7,6 +7,12 @@ services:
       - ./backend/.env
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 3s
+      interval: 5s
+      timeout: 5s
+      retries: 3
 
   backend:
     build:
@@ -16,7 +22,8 @@ services:
     restart: always
     working_dir: "/backend"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - '3006:3000'
     volumes:

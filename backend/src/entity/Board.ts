@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TaskGroup } from "./TaskGroup";
+import { Workspace } from "./Workspace";
 
 @Entity()
 export class Board {
@@ -14,4 +15,10 @@ export class Board {
         (taskGroup) => taskGroup.board,
     )
     taskGroups: TaskGroup[];
+
+    @ManyToOne(
+        () => Workspace,
+        (workspace) => workspace.boards,
+    )
+    workspace: Workspace;
 }
