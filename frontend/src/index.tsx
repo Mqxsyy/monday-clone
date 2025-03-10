@@ -2,7 +2,8 @@ import { render } from "solid-js/web";
 import "./index.css";
 import { Route, Router } from "@solidjs/router";
 import App from "./App.jsx";
-import Boards from "./components/Boards.jsx";
+import Board from "./pages/Board.jsx";
+import Home from "./pages/Home.jsx";
 
 const root = document.getElementById("root");
 
@@ -16,7 +17,8 @@ if (root) {
     render(
         () => (
             <Router root={App}>
-                <Route path="/" component={Boards} />
+                <Route path="/" component={Home} />
+                <Route path="/board" component={Board} />
             </Router>
         ),
         root,

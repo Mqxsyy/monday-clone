@@ -12,6 +12,12 @@ export class Task {
     @Column({ nullable: true })
     description?: string;
 
+    @Column()
+    taskOrder: number;
+
+    @Column("json")
+    fieldData: unknown;
+
     @ManyToOne(
         () => TaskGroup,
         (taskGroup) => taskGroup.tasks,

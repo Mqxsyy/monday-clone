@@ -1,3 +1,4 @@
+import { A } from "@solidjs/router";
 import { TbFlower, TbGridDots } from "solid-icons/tb";
 
 export default function TopBar() {
@@ -6,12 +7,12 @@ export default function TopBar() {
             <div class="mx-1 mt-1">
                 <TbGridDots size={24} />
             </div>
-            <button class="btn btn-ghost text-lg font-bold" type="button">
+            <A href="/" class="btn btn-ghost text-lg font-bold">
                 <div class="mx-1 mt-1">
                     <TbFlower size={24} />
                 </div>
                 monday <span class="font-normal">work management</span>
-            </button>
+            </A>
         </div>
     );
 }

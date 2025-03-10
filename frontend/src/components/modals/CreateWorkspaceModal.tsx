@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js";
-import { ReloadSidebarWorkspaces } from "../SideBar.jsx";
+import { ReloadWorkspaces } from "../../stores/workspaceStore.js";
 
 export const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = createSignal(false);
 export const toggleCreateWorkspaceModal = () => setShowCreateWorkspaceModal((prev) => !prev);
@@ -20,7 +20,7 @@ export default function CreateWorkspaceModal() {
             body: JSON.stringify({ title: title() }),
         });
 
-        ReloadSidebarWorkspaces();
+        ReloadWorkspaces();
     };
 
     return (

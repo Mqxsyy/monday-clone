@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Task } from "./Task";
 import { Board } from "./Board";
+import { Task } from "./Task";
 
 @Entity()
 export class TaskGroup {
@@ -9,6 +9,12 @@ export class TaskGroup {
 
     @Column()
     title: string;
+
+    @Column()
+    groupOrder: number;
+
+    @Column()
+    groupColor: string;
 
     @OneToMany(
         () => Task,

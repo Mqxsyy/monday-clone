@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Workspace } from "./Workspace";
 
 @Entity()
 export class User {
@@ -6,11 +7,17 @@ export class User {
     id: number;
 
     @Column()
-    firstName: string;
+    username: string;
 
     @Column()
-    lastName: string;
+    email: string;
 
     @Column()
-    age: number;
+    imagePath: string;
+
+    @OneToMany(
+        () => Workspace,
+        (workspace) => workspace.owner,
+    )
+    ownedWorkspaces: Workspace[];
 }

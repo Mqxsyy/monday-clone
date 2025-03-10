@@ -1,9 +1,29 @@
 import { Hono } from "hono";
 import { AppDataSource } from "../data-source";
 import { Board } from "../entity/Board";
+import { Task } from "../entity/Task";
+import { TaskGroup } from "../entity/TaskGroup";
 import { Workspace } from "../entity/Workspace";
 
 const app = new Hono();
+
+function createTaskgroup(taskGroupTitle: string, order: number, board: Board) {
+    const taskGroup = new TaskGroup();
+    taskGroup.title = taskGroupTitle;
+    taskGroup.groupOrder = order;
+    taskGroup.groupColor = "#FFFFFF";
+    taskGroup.board = board;
+    return taskGroup;
+}
+
+function createTask(taskTitle: string, order: number, taskGroup: TaskGroup) {
+    const task = new Task();
+    task.title = taskTitle;
+    task.taskOrder = order;
+    task.fieldData = {};
+    task.taskGroup = taskGroup;
+    return task;
+}
 
 app.post("/", async (c) => {
     const { title, workspaceId } = await c.req.json();
@@ -20,7 +40,19 @@ app.post("/", async (c) => {
     board.title = title;
     board.workspace = workspace;
 
-    await AppDataSource.manager.save(board);
+    let groupOrder = 0;
+    let taskOrder = 0;
+
+    const taskGroup1 = createTaskgroup("Group Title", ++groupOrder, board);
+    const task1 = createTask("Task 1", ++taskOrder, taskGroup1);
+    const task2 = createTask("Task 2", ++taskOrder, taskGroup1);
+    const task3 = createTask("Task 3", ++taskOrder, taskGroup1);
+
+    const taskGroup2 = createTaskgroup("Group Title", ++groupOrder, board);
+    const task4 = createTask("Task 4", ++taskOrder, taskGroup2);
+    const task5 = createTask("Task 5", ++taskOrder, taskGroup2);
+
+    await AppDataSource.manager.save([board, taskGroup1, taskGroup2, task1, task2, task3, task4, task5]);
 
     return c.json({ message: "Board created", board: board }, 201);
 });

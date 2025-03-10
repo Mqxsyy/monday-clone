@@ -1,5 +1,6 @@
 import { createSignal } from "solid-js";
-import { ReloadSidebarBoards, selectedWorkspaceId } from "../SideBar.jsx";
+import { ReloadBoards } from "../../stores/boardStore.js";
+import { selectedWorkspace } from "../../stores/workspaceStore.js";
 
 export const [showCreateBoardModal, setShowCreateBoardModal] = createSignal(false);
 export const toggleCreateBoardModal = () => setShowCreateBoardModal((prev) => !prev);
@@ -12,7 +13,8 @@ export default function CreateBoardModal() {
 
         e.preventDefault();
 
-        if (selectedWorkspaceId() === -1) {
+        const workspace = selectedWorkspace();
+        if (!workspace) {
             return;
         }
 
@@ -23,11 +25,11 @@ export default function CreateBoardModal() {
             },
             body: JSON.stringify({
                 title: title(),
-                workspaceId: selectedWorkspaceId(),
+                workspaceId: workspace.id,
             }),
         });
 
-        ReloadSidebarBoards();
+        ReloadBoards();
     };
 
     return (

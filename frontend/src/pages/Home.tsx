@@ -1,8 +1,8 @@
 import { FaSolidAngleDown, FaSolidAngleUp } from "solid-icons/fa";
 import { Match, Show, Switch, createSignal } from "solid-js";
-import BoardCard from "./BoardCard.jsx";
+import BoardCard from "../components/BoardCard.jsx";
 
-export default function Boards() {
+export default function Home() {
     const [showBoards, setShowBoards] = createSignal(true);
     const toggleBoard = () => setShowBoards((prev) => !prev);
 

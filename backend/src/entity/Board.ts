@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { TaskField } from "./TaskField";
 import { TaskGroup } from "./TaskGroup";
 import { Workspace } from "./Workspace";
 
@@ -21,4 +22,10 @@ export class Board {
         (workspace) => workspace.boards,
     )
     workspace: Workspace;
+
+    @OneToMany(
+        () => TaskField,
+        (taskField) => taskField.board,
+    )
+    taskFields: TaskField[];
 }

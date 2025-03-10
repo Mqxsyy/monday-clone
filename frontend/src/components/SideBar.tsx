@@ -1,69 +1,26 @@
 import { AiOutlinePlus } from "solid-icons/ai";
 import { BsThreeDots } from "solid-icons/bs";
-import { Index, createSignal } from "solid-js";
+import { Index } from "solid-js";
+import { SelectBoard, boards } from "../stores/boardStore.js";
+import { ReloadWorkspaces, SelectWorkspace, selectedWorkspace, workspaces } from "../stores/workspaceStore.js";
 import SidebarButton from "./SidebarButton.jsx";
 import { toggleCreateBoardModal } from "./modals/CreateBoardModal.jsx";
 import { toggleCreateWorkspaceModal } from "./modals/CreateWorkspaceModal.jsx";
 
-interface Workspace {
-    id: number;
-    title: string;
-}
-
-interface Board {
-    id: number;
-    title: string;
-}
-
-export const [selectedWorkspaceId, setSelectedWorkspaceId] = createSignal(-1);
-
-const [selectedWorkspaceName, setSelectedWorkspaceName] = createSignal("No workspace");
-const [workspaces, setWorkspaces] = createSignal([] as Workspace[]);
-const [boards, setBoards] = createSignal([] as Board[]);
-
-export const ReloadSidebarBoards = async () => {
-    if (selectedWorkspaceId() === -1) {
-        return;
-    }
-
-    const response = await fetch(`http://localhost:3006/workspaces/${selectedWorkspaceId()}`);
-    const data = await response.json();
-    setBoards(data.boards);
-};
-
-const selectSidebarWorkspace = async (id: number, title: string) => {
-    await fetch(`http://localhost:3006/workspaces/${id}`);
-
-    setSelectedWorkspaceName(title);
-    setSelectedWorkspaceId(id);
-
-    ReloadSidebarBoards();
-};
-
-export const ReloadSidebarWorkspaces = async () => {
-    const response = await fetch("http://localhost:3006/workspaces");
-    const data = await response.json();
-    setWorkspaces(data);
-
-    if (selectedWorkspaceId() === -1 && data[0]) {
-        selectSidebarWorkspace(data[0].id, data[0].title);
-    }
-};
-
 export default function SideBar() {
-    ReloadSidebarWorkspaces();
+    ReloadWorkspaces();
 
     return (
         <div class="flex flex-col bg-base-100 w-3xs py-2 mr-2 rounded-tr-lg h-full">
             <div class="flex flex-col mx-4">
-                <SidebarButton text={"Home"} />
-                <SidebarButton text={"My Work"} />
-                <SidebarButton text={"More"} />
+                <SidebarButton text="Home" path="/" />
+                <SidebarButton text="My Work" path="/" />
+                <SidebarButton text="More" path="/" />
             </div>
             <div class="divider m-0" />
 
             <div class="flex flex-col mx-4">
-                <SidebarButton text={"Favorites"} />
+                <SidebarButton text={"Favorites"} path="/" />
             </div>
             <div class="divider m-0" />
 
@@ -88,17 +45,14 @@ export default function SideBar() {
             <div class="flex flex-row ml-4 mr-1 mb-2">
                 <div class="dropdown grow mr-2">
                     <button tabindex="0" class="btn m-1 btn-ghost btn-outline w-full" type="button">
-                        {selectedWorkspaceName()}
+                        {selectedWorkspace() ? selectedWorkspace()?.title : "No workspace"}
                     </button>
 
                     <ul tabindex="0" class="dropdown-content menu bg-base-200 rounded-box p-2 shadow-sm w-48">
                         <Index each={workspaces()}>
                             {(item, _) => (
                                 <li>
-                                    <button
-                                        type="button"
-                                        onClick={() => selectSidebarWorkspace(item().id, item().title)}
-                                    >
+                                    <button type="button" onClick={() => SelectWorkspace(item())}>
                                         {item().title}
                                     </button>
                                 </li>
@@ -124,7 +78,11 @@ export default function SideBar() {
             </div>
 
             <div class="flex flex-col mx-4">
-                <Index each={boards()}>{(item, _) => <SidebarButton text={item().title} />}</Index>
+                <Index each={boards()}>
+                    {(item, _) => (
+                        <SidebarButton text={item().title} path="/board" onClick={() => SelectBoard(item())} />
+                    )}
+                </Index>
             </div>
         </div>
     );
