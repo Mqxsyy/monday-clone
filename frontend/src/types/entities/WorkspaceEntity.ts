@@ -1,4 +1,4 @@
-export interface Board {
+export interface WorkspaceEntity {
     id: number;
     title: string;
 }

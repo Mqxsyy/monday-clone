@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import type { TaskField as ITaskField } from "../types/TaskFields";
 import { Board } from "./Board";
 
 @Entity()
@@ -7,11 +8,12 @@ export class TaskField {
     id: number;
 
     @Column("json")
-    data: unknown;
+    value: ITaskField;
 
     @ManyToOne(
         () => Board,
         (board) => board.taskFields,
+        { onDelete: "CASCADE" },
     )
     board: Board;
 }

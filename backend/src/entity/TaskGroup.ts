@@ -25,6 +25,7 @@ export class TaskGroup {
     @ManyToOne(
         () => Board,
         (board) => board.taskGroups,
+        { onDelete: "CASCADE" },
     )
     board: Board;
 }

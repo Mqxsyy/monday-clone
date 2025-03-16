@@ -1,15 +1,20 @@
 import { Hono } from "hono";
 import { AppDataSource } from "../data-source";
 import { Task } from "../entity/Task";
+import { TaskFieldValue } from "../entity/TaskFieldValue";
 import { TaskGroup } from "../entity/TaskGroup";
+import { TaskFieldType } from "../types/TaskFieldType";
 
 const app = new Hono();
 
 app.post("/", async (c) => {
     const { title, taskGroupId } = await c.req.json();
 
-    const taskGroup = await AppDataSource.manager.findOneBy(TaskGroup, {
-        id: Number(taskGroupId),
+    const taskGroup = await AppDataSource.manager.findOne(TaskGroup, {
+        where: {
+            id: Number(taskGroupId),
+        },
+        relations: ["tasks", "board", "board.taskFields"],
     });
 
     if (!taskGroup) {
@@ -18,9 +23,25 @@ app.post("/", async (c) => {
 
     const task = new Task();
     task.title = title;
+    task.taskOrder = taskGroup.tasks.length + 1;
     task.taskGroup = taskGroup;
 
-    await AppDataSource.manager.save(task);
+    const taskFields: TaskFieldValue[] = [];
+
+    for (const taskField of taskGroup.board.taskFields) {
+        const fieldType = taskField.value.type;
+        if (fieldType === TaskFieldType.TextField) {
+            const textField = new TaskFieldValue();
+            textField.value = {
+                type: TaskFieldType.TextField,
+                value: "",
+            };
+            textField.task = task;
+            taskFields.push(textField);
+        }
+    }
+
+    await AppDataSource.manager.save([task, ...taskFields]);
 
     return c.json({ message: "Task created", task }, 201);
 });
@@ -38,7 +59,7 @@ app.get("/:id", async (c) => {
     return c.json({ error: "Task not found" }, 404);
 });
 
-app.put("/:id", async (c) => {
+app.patch("/:id", async (c) => {
     const id = c.req.param("id");
     const { title, taskGroupId } = await c.req.json();
 

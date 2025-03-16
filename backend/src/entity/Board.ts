@@ -12,6 +12,12 @@ export class Board {
     title: string;
 
     @OneToMany(
+        () => TaskField,
+        (taskField) => taskField.board,
+    )
+    taskFields: TaskField[];
+
+    @OneToMany(
         () => TaskGroup,
         (taskGroup) => taskGroup.board,
     )
@@ -20,12 +26,7 @@ export class Board {
     @ManyToOne(
         () => Workspace,
         (workspace) => workspace.boards,
+        { onDelete: "CASCADE" },
     )
     workspace: Workspace;
-
-    @OneToMany(
-        () => TaskField,
-        (taskField) => taskField.board,
-    )
-    taskFields: TaskField[];
 }

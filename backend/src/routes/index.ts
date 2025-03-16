@@ -4,6 +4,7 @@ import board from "./board";
 import task from "./task";
 import taskGroup from "./taskGroup";
 import workspace from "./workspace";
+import taskField from "./taskField";
 
 const app = new Hono();
 app.get("/", (c) => c.text("Tasks App API"));
@@ -13,6 +14,7 @@ app.route("/boards", board);
 app.route("/taskGroups", taskGroup);
 app.route("/tasks", task);
 app.route("/workspaces", workspace);
+app.route("/taskField", taskField)
 
 const port = 3000;
 console.log(`Server is running on http://localhost:${port}`);

@@ -1,8 +1,8 @@
 import { createSignal } from "solid-js";
-import type { TaskGroup } from "../types/TaksGroup.js";
+import type { TaskGroupEntity } from "../types/entities/TaskGroupEntity.js";
 import { selectedBoard } from "./boardStore.js";
 
-const [taskGroups, setTaskGroups] = createSignal<TaskGroup[]>([]);
+const [taskGroups, setTaskGroups] = createSignal<TaskGroupEntity[]>([]);
 
 export async function ReloadTaskGroups() {
     const board = selectedBoard();
@@ -17,8 +17,9 @@ export async function ReloadTaskGroups() {
     setTaskGroups([]);
 
     for (const taskGroup of data.taskGroups) {
-        const response2 = await fetch(`http://localhost:3006/taskGroups/${taskGroup.id}`);
+        const response2 = await fetch(`http://localhost:3006/taskGroups/${taskGroup.id}/tasks`);
         const data = await response2.json();
+        console.log(data);
         setTaskGroups((prev) => [...prev, data]);
     }
 }

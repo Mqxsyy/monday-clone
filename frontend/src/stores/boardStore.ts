@@ -1,12 +1,12 @@
 import { createSignal } from "solid-js";
-import type { Board } from "../types/Board.js";
+import type { BoardEntity } from "../types/entities/BoardEntity.js";
 import { ReloadTaskGroups } from "./taskGroupStore.js";
 import { selectedWorkspace } from "./workspaceStore.js";
 
-const [selectedBoard, setSelectedBoard] = createSignal<Board | undefined>();
-const [boards, setBoards] = createSignal<Board[]>([]);
+const [selectedBoard, setSelectedBoard] = createSignal<BoardEntity | undefined>();
+const [boards, setBoards] = createSignal<BoardEntity[]>([]);
 
-export async function SelectBoard(board: Board) {
+export async function SelectBoard(board: BoardEntity) {
     setSelectedBoard(board);
     ReloadTaskGroups();
 }

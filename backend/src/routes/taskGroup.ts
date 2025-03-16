@@ -25,17 +25,19 @@ app.post("/", async (c) => {
 
 app.get("/:id", async (c) => {
     const id = c.req.param("id");
+    const taskGroup = await AppDataSource.manager.findOneBy(TaskGroup, { id: Number(id) });
+    return taskGroup ? c.json(taskGroup) : c.json({ error: "Task group not found" }, 404);
+});
+
+app.get("/:id/tasks", async (c) => {
+    const id = c.req.param("id");
 
     const taskGroup = await AppDataSource.manager.findOne(TaskGroup, {
         where: { id: Number(id) },
-        relations: ["tasks"],
+        relations: ["tasks", "tasks.taskFieldValues"],
     });
 
-    if (!taskGroup) {
-        return c.json({ error: "Task group not found" }, 404);
-    }
-
-    return c.json(taskGroup);
+    return taskGroup ? c.json(taskGroup) : c.json({ error: "Task group not found" }, 404);
 });
 
 app.put("/:id", async (c) => {

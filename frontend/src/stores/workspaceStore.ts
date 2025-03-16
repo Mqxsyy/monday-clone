@@ -1,11 +1,11 @@
 import { createSignal } from "solid-js";
-import type { Workspace } from "../types/Workspace.js";
+import type { WorkspaceEntity } from "../types/entities/WorkspaceEntity.js";
 import { ReloadBoards } from "./boardStore.js";
 
-const [selectedWorkspace, setSelectedWorkspace] = createSignal<Workspace | undefined>();
-const [workspaces, setWorkspaces] = createSignal<Workspace[]>();
+const [selectedWorkspace, setSelectedWorkspace] = createSignal<WorkspaceEntity | undefined>();
+const [workspaces, setWorkspaces] = createSignal<WorkspaceEntity[]>();
 
-export async function SelectWorkspace(workspace: Workspace) {
+export async function SelectWorkspace(workspace: WorkspaceEntity) {
     setSelectedWorkspace(workspace);
     ReloadBoards();
 }
