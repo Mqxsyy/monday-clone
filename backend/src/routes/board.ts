@@ -27,7 +27,15 @@ app.post("/", async (c) => {
     textField.value = { type: "TextField", name: "Text" };
     textField.board = board;
 
-    await AppDataSource.manager.save([board, textField]);
+    const textField2 = new TaskField();
+    textField2.value = { type: "TextField", name: "Text" };
+    textField2.board = board;
+
+    const textField3 = new TaskField();
+    textField3.value = { type: "TextField", name: "Text" };
+    textField3.board = board;
+
+    await AppDataSource.manager.save([board, textField, textField2, textField3]);
 
     const taskGroup1 = await CreateTaskGroup("Group Title", board.id);
     CreateTask("Task 1", taskGroup1.id);

@@ -28,7 +28,7 @@ app.get("/:id", async (c) => {
         where: {
             id: Number(id),
         },
-        relations: ["boards"],
+        relations: ["boards", "boards.taskFields"],
     });
 
     if (!workspace) {
