@@ -1,39 +1,12 @@
 import { Hono } from "hono";
 import { AppDataSource } from "../data-source";
 import { Board } from "../entity/Board";
-import { Task } from "../entity/Task";
 import { TaskField } from "../entity/TaskField";
-import { TaskFieldValue } from "../entity/TaskFieldValue";
-import { TaskGroup } from "../entity/TaskGroup";
 import { Workspace } from "../entity/Workspace";
-import GetRandomGroupColor from "../utils/getRandomGroupColor";
+import CreateTask from "../utils/createTask";
+import CreateTaskGroup from "../utils/createTaskGroup";
 
 const app = new Hono();
-
-async function createTaskgroup(taskGroupTitle: string, order: number, board: Board) {
-    const taskGroup = new TaskGroup();
-    taskGroup.title = taskGroupTitle;
-    taskGroup.groupOrder = order;
-    taskGroup.groupColor = GetRandomGroupColor();
-    taskGroup.board = board;
-
-    await AppDataSource.manager.save(taskGroup);
-
-    return taskGroup;
-}
-
-async function createTask(taskTitle: string, order: number, taskGroup: TaskGroup) {
-    const task = new Task();
-    task.title = taskTitle;
-    task.taskOrder = order;
-    task.taskGroup = taskGroup;
-
-    const textFieldValue = new TaskFieldValue();
-    textFieldValue.value = { type: "TextField", value: "" };
-    textFieldValue.task = task;
-
-    await AppDataSource.manager.save([task, textFieldValue]);
-}
 
 app.post("/", async (c) => {
     const { title, workspaceId } = await c.req.json();
@@ -56,17 +29,14 @@ app.post("/", async (c) => {
 
     await AppDataSource.manager.save([board, textField]);
 
-    let groupOrder = 0;
-    let taskOrder = 0;
+    const taskGroup1 = await CreateTaskGroup("Group Title", board.id);
+    CreateTask("Task 1", taskGroup1.id);
+    CreateTask("Task 2", taskGroup1.id);
+    CreateTask("Task 3", taskGroup1.id);
 
-    const taskGroup1 = await createTaskgroup("Group Title", ++groupOrder, board);
-    createTask("Task 1", ++taskOrder, taskGroup1);
-    createTask("Task 2", ++taskOrder, taskGroup1);
-    createTask("Task 3", ++taskOrder, taskGroup1);
-
-    const taskGroup2 = await createTaskgroup("Group Title", ++groupOrder, board);
-    createTask("Task 4", ++taskOrder, taskGroup2);
-    createTask("Task 5", ++taskOrder, taskGroup2);
+    const taskGroup2 = await CreateTaskGroup("Group Title", board.id);
+    CreateTask("Task 4", taskGroup2.id);
+    CreateTask("Task 5", taskGroup2.id);
 
     return c.json({ message: "Board created", board: board }, 201);
 });

@@ -2,30 +2,26 @@ import { Hono } from "hono";
 import { AppDataSource } from "../data-source";
 import { Board } from "../entity/Board";
 import { TaskGroup } from "../entity/TaskGroup";
+import CreateTaskGroup from "../utils/createTaskGroup";
 
 const app = new Hono();
 
 app.post("/", async (c) => {
     const { title, boardId } = await c.req.json();
+    const taskGroup = await CreateTaskGroup(title, boardId);
 
-    const board = await AppDataSource.manager.findOneBy(Board, { id: Number(boardId) });
-
-    if (!board) {
-        return c.json({ error: "Board not found" }, 404);
+    if (!taskGroup) {
+        return c.json({ error: `Board with id ${boardId} not found` }, 404);
     }
-
-    const taskGroup = new TaskGroup();
-    taskGroup.title = title;
-    taskGroup.board = board;
-
-    await AppDataSource.manager.save(taskGroup);
 
     return c.json({ message: "Task group created", taskGroup }, 201);
 });
 
 app.get("/:id", async (c) => {
     const id = c.req.param("id");
-    const taskGroup = await AppDataSource.manager.findOneBy(TaskGroup, { id: Number(id) });
+    const taskGroup = await AppDataSource.manager.findOneBy(TaskGroup, {
+        id: Number(id),
+    });
     return taskGroup ? c.json(taskGroup) : c.json({ error: "Task group not found" }, 404);
 });
 
@@ -40,7 +36,7 @@ app.get("/:id/tasks", async (c) => {
     return taskGroup ? c.json(taskGroup) : c.json({ error: "Task group not found" }, 404);
 });
 
-app.put("/:id", async (c) => {
+app.patch("/:id", async (c) => {
     const id = c.req.param("id");
     const { title, boardId } = await c.req.json();
 
