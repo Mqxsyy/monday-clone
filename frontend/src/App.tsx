@@ -7,10 +7,10 @@ import CreateWorkspaceModal from "./components/modals/CreateWorkspaceModal.jsx";
 
 export default function App(props: ParentProps) {
     return (
-        <div class="bg-base-200 h-screen">
+        <div class="flex flex-col h-screen bg-base-200">
             <TopBar />
 
-            <div class="flex flex-row w-full h-full">
+            <div class="flex flex-row flex-1 h-0">
                 <SideBar />
                 <Dashboard>{props.children}</Dashboard>
             </div>

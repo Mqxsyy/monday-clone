@@ -14,14 +14,15 @@ export async function ReloadTaskGroups() {
     const response1 = await fetch(`http://localhost:3006/boards/${board.id}`);
     const data = await response1.json();
 
-    setTaskGroups([]);
+    const taskGroups: TaskGroupEntity[] = [];
 
     for (const taskGroup of data.taskGroups) {
         const response2 = await fetch(`http://localhost:3006/taskGroups/${taskGroup.id}/tasks`);
         const data = await response2.json();
-        console.log(data);
-        setTaskGroups((prev) => [...prev, data]);
+        taskGroups.push(data);
     }
+
+    setTaskGroups(taskGroups);
 }
 
 export { taskGroups };
